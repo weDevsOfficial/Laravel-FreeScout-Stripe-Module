@@ -1,0 +1,36 @@
+{
+  "name": "wedevs_official/laravel_freescout_stripe_module",
+  "description": "Freescout stripe modules",
+  "version": "1.0.1",
+  "keywords": [
+    "helpdesk",
+    "help desk",
+    "shared mailbox",
+    "freescout",
+    "wedevs",
+    "stripe"
+  ],
+  "license": "AGPL-3.0",
+  "authors": [
+    {
+      "name": "Tareq Hasan",
+      "email": "tareq1988@anichur.com"
+    }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Modules\\Stripe\\Providers\\StripeServiceProvider"
+      ],
+      "aliases": {}
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Modules\\Stripe\\": ""
+    }
+  },
+  "require": {
+    "stripe/stripe-php": "^10.4"
+  }
+}

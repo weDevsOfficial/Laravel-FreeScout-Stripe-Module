@@ -1,0 +1,19 @@
+{
+  "name": "Stripe",
+  "alias": "stripe",
+  "description": "Show customer's stripe data.",
+  "version": "1.0.0",
+  "detailsUrl": "https://github.com/weDevsOfficial/Laravel-FreeScout-Stripe-Module",
+  "author": "Tareq Hasan",
+  "authorUrl": "https://github.com/tareq1988",
+  "requiredAppVersion": "1.0.2",
+  "license": "AGPL-3.0",
+  "keywords": [],
+  "active": 0,
+  "order": 0,
+  "img": "",
+  "providers": ["Modules\\Stripe\\Providers\\StripeServiceProvider"],
+  "aliases": {},
+  "files": ["start.php"],
+  "requires": []
+}
