@@ -28,7 +28,7 @@ class StripeServiceProvider extends ServiceProvider
     */
     public function register()
     {
-        //
+        $this->registerConfig();
     }
 
     /**
@@ -39,7 +39,6 @@ class StripeServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->registerConfig();
         $this->registerAssets();
         $this->registerViews();
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
