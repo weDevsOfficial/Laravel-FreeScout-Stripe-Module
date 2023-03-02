@@ -23,7 +23,13 @@ After requiring package, add service provider of this package to providers in `c
 
 ### • Install as a laravel Modules
 
-If you want to use this package like a freescout modules, First you need to clone or download this package and put it inside the modules folder. For more information about modules development process and artisan command you can [Go nwidart modules development docs](https://nwidart.com/laravel-modules/v6/introduction).
+If you want to use this package like a freescout modules, First you need to clone or download this package and put it inside the modules folder. Then need to install stripe client via composer
+
+```php
+   composer require stripe/stripe-php
+```
+
+For more information about modules development process and artisan command you can [Go nwidart modules development docs](https://nwidart.com/laravel-modules/v6/introduction).
 ## Configuration
 
 ### Migrations
