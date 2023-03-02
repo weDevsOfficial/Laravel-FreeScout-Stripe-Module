@@ -42,11 +42,19 @@ class StripeServiceProvider extends ServiceProvider
         $this->registerAssets();
         $this->registerViews();
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->hooks();
         $this->registerTranslations();
+        $this->registerMigration();
     }
 
+    protected function registerMigration()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+        $this->publishes([
+            __DIR__ . '/../Database/Migrations/2023_02_07_091128_create_stripe_settings_table.php' => database_path('migrations/'. date('Y_m_d_His', time()).'_create_stripe_settings_table.php'),
+        ], 'stripe-migration');
+    }
      /**
      * Register config.
      *
@@ -56,8 +64,7 @@ class StripeServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../Config/stripe.php' => config_path('stripe.php'),
-        ], 'config');
-
+        ], 'stripe-config');
 
         $this->mergeConfigFrom(
             __DIR__.'/../Config/stripe.php',
