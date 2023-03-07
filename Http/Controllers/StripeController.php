@@ -42,7 +42,7 @@ class StripeController extends Controller
     }
 
     /**
-     * Summary of update
+     * Update stripe key
      * @param Request $request
      * @return void
      */
@@ -68,5 +68,22 @@ class StripeController extends Controller
         }
 
         return redirect()->route('stripe.settings', $mailbox->id);
+    }
+
+     /**
+     *  Delete stripe key
+     * @param Request $request
+     * @return void
+     */
+    public function destroy(Request $request, Mailbox $mailbox)
+    {
+        try {
+            $mailbox->stripeSetting()->delete();
+            \Session::flash('flash_success_floating', __('Secret Key delete Successfully'));
+        } catch (DecryptException $th) {
+            \Session::flash('flash_error_floating', __($th->getMessage()));
+        }
+
+        return redirect()->back();
     }
 }
