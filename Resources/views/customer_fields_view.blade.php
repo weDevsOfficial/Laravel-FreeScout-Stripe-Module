@@ -16,24 +16,25 @@
             <div class="tab-content"> 
                 <div class="subscriptions">
                     <p class="subscription-title">{{__('Subscriptions')}}<p>
-                    @forelse($productWithSubscriptions[$productName] as $key => $subscription)  
-                        <div class="subscription {{ $loop->first ? 'first-subscription' : ''}}" >  
-                            <span class="status">{{$subscription->status}}</span> 
-                             
-                            @foreach($invoices as $inv)
-                                @if($inv->id == $subscription->latest_invoice)
-                                    <span class="price">
-                                     {{$inv->currency_symbol}}{{number_format($inv->total/100, 2)}} 
-                                    </span> 
-                                        <span class="date-time">{{date('M d, h:i A', $inv->created)}}</span>
-                                @endif
-                            @endforeach
+                    @if(count($productWithSubscriptions) > 0) 
+                        @foreach($productWithSubscriptions[$productName] as $key => $subscription)  
+                            <div class="subscription {{ $loop->first ? 'first-subscription' : ''}}" >  
+                                <span class="status">{{$subscription->status}}</span> 
+                                
+                                @foreach($invoices as $inv)
+                                    @if($inv->id == $subscription->latest_invoice)
+                                        <span class="price">
+                                            {{$inv->currency_symbol.$inv->total}} 
+                                        </span> 
+                                            <span class="date-time">{{date('M d, h:i A', $inv->created)}}</span>
+                                    @endif
+                                @endforeach
 
-                            
-                        </div>  
-                    @empty
-                        <p>{{__('No Subscription found')}}</p>
-                    @endforelse
+                            </div>  
+                        @endforeach
+                    @else
+                            <p>{{__('No Subscription found')}}</p>
+                    @endif
                 </div>
 
                 <div class="invoices">

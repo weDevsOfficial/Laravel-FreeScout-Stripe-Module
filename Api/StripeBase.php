@@ -82,7 +82,7 @@ class StripeBase
 
         $this->result = [];
         foreach ($customerIds as $customerId) {
-            $subscriptions = $this->stripe->subscriptions->all(["customer" => $customerId, "limit" => 20]);
+            $subscriptions = $this->stripe->subscriptions->all(["customer" => $customerId, "limit" => 5]);
             foreach ($subscriptions->data as $subscription) {
                 $productId = $subscription->items->data[0]->plan->product;
                 $product = $this->getProduct($productId);

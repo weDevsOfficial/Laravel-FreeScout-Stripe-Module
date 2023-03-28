@@ -124,6 +124,7 @@ class StripeServiceProvider extends ServiceProvider
     public function getStripeInvoices($email)
     {
         $stripeSecret = $this->getStripeSecretKey($email);
+        
         if (! empty($stripeSecret)) {
             $stripe = new Stripe($stripeSecret);
             $stripeInvoices = $stripe->getInvoices($email);
@@ -133,6 +134,7 @@ class StripeServiceProvider extends ServiceProvider
 
         return false;
     }
+
     /**
      * Get Stripe Invoice
      * @param mixed $email
