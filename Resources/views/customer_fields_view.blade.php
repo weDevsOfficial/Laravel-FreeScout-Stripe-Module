@@ -47,7 +47,7 @@
                             </div> 
                         @endif
                     @empty
-                        <p>{{__('No Invoice found')}}</p>
+                        <p>{{ __('No Invoice found') }}</p>
                     @endforelse
                 </div>
             </div>

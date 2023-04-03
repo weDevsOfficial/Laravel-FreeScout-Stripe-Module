@@ -2,7 +2,7 @@
   "name": "Stripe",
   "alias": "stripe",
   "description": "Show customer's stripe data.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "detailsUrl": "https://github.com/weDevsOfficial/Laravel-FreeScout-Stripe-Module",
   "author": "Tareq Hasan",
   "authorUrl": "https://github.com/tareq1988",

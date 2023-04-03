@@ -28,7 +28,7 @@ class StripeServiceProvider extends ServiceProvider
     */
     public function register()
     {
-        $this->registerConfig();
+        //
     }
 
     /**
@@ -39,6 +39,7 @@ class StripeServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->registerConfig();
         $this->registerAssets();
         $this->registerViews();
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
@@ -196,6 +197,7 @@ class StripeServiceProvider extends ServiceProvider
         ], 'public');
     }
 
+   
     /**
      * Register translations.
      *
@@ -203,7 +205,13 @@ class StripeServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $this->loadJsonTranslationsFrom(__DIR__ .'/../Resources/lang');
+        $langPath = resource_path('lang/modules/stripe');
+
+        if (is_dir($langPath)) {
+            $this->loadTranslationsFrom($langPath, 'stripe');
+        } else {
+            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'stripe'); 
+        }
     }
 
     /**
