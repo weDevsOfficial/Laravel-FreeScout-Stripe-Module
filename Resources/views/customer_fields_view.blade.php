@@ -16,7 +16,7 @@
             <div class="tab-content"> 
                 <div class="subscriptions">
                     <p class="subscription-title">{{__('Subscriptions')}}<p>
-                    @if(count($productWithSubscriptions) > 0) 
+                    @if(isset($productWithSubscriptions[$productName])) 
                         @foreach($productWithSubscriptions[$productName] as $key => $subscription)  
                             <div class="subscription {{ $loop->first ? 'first-subscription' : ''}}" >  
                                 <span class="status">{{$subscription->status}}</span> 
