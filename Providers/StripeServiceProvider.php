@@ -108,7 +108,8 @@ class StripeServiceProvider extends ServiceProvider
     {
         $customer = Conversation::where('customer_email', $email)->first();
 
-        $stripeSettings = StripeSetting::select('stripe_secret_key')->where('mailbox_id', $customer->mailbox->id)->first();
+        $mailboxID = isset($customer->mailbox) ? $customer->mailbox->id : '';
+        $stripeSettings = StripeSetting::select('stripe_secret_key')->where('mailbox_id', $mailboxID)->first();
 
         if (isset($stripeSettings)) {
             return Crypt::decryptString($stripeSettings->stripe_secret_key);
