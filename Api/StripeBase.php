@@ -42,21 +42,30 @@ class StripeBase
     }
 
     /**
-     * Get All Invoices 
+     * Get All Invoices
      * @return StripeBase
      */
     public function invoices()
     {
         $customerIds = array_map(function ($item) {
             return $item->id;
-        }, $this->result->data);
+        }, data_get($this->result, ['data']));
 
         $this->result = [];
+
         foreach ($customerIds as $customerId) {
+
             $invoices = $this->stripe->invoices->all(["customer" => $customerId, "limit" => 5]);
+
             foreach ($invoices->data as $invoice) {
-                $productId = $invoice->lines->data[0]->plan->product;
+                $productId = data_get($invoice, ['lines', 'data', 0, 'plan', 'product']);
+
+                if(empty($productId)) {
+                    continue;
+                }
+
                 $product = $this->getProduct($productId);
+
                 if (!isset($this->result[$product->name])) {
                     $this->result[$product->name] = [];
                 }
@@ -78,14 +87,21 @@ class StripeBase
     {
         $customerIds = array_map(function ($item) {
             return $item->id;
-        }, $this->result->data);
+        }, data_get($this->result, ['data']));
 
         $this->result = [];
         foreach ($customerIds as $customerId) {
             $subscriptions = $this->stripe->subscriptions->all(["customer" => $customerId, "limit" => 20]);
+
             foreach ($subscriptions->data as $subscription) {
-                $productId = $subscription->items->data[0]->plan->product;
+                $productId = data_get($subscription, ['items', 'data', 0, 'plan', 'product']);
+
+                if(empty($productId)) {
+                    continue;
+                }
+
                 $product = $this->getProduct($productId);
+
                 if (!isset($this->result[$product->name])) {
                     $this->result[$product->name] = [];
                 }

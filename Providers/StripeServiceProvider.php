@@ -56,11 +56,11 @@ class StripeServiceProvider extends ServiceProvider
             __DIR__ . '/../Database/Migrations/2023_02_07_091128_create_stripe_settings_table.php' => database_path('migrations/'. date('Y_m_d_His', time()).'_create_stripe_settings_table.php'),
         ], 'stripe-migration');
     }
-     /**
-     * Register config.
-     *
-     * @return void
-     */
+    /**
+    * Register config.
+    *
+    * @return void
+    */
     protected function registerConfig()
     {
         $this->publishes([
@@ -95,20 +95,24 @@ class StripeServiceProvider extends ServiceProvider
      */
     public function customerProfileExtra($customer)
     {
-        $productWithInvoices = $this->getStripeInvoices($customer->getMainEmail());
-        $productWithSubscriptions = $this->getStripeSubscriptions($customer->getMainEmail());
+        $stripeSecret = $this->getStripeSecretKey($customer->getMainEmail());
 
-        echo View::make('stripe::customer_fields_view', [
-            'productWithInvoices' => $productWithInvoices,
-            'productWithSubscriptions' => $productWithSubscriptions
-        ])->render();
+        if(!empty($stripeSecret)) {
+            $productWithInvoices = $this->getStripeInvoices($customer->getMainEmail(), $stripeSecret);
+            $productWithSubscriptions = $this->getStripeSubscriptions($customer->getMainEmail(), $stripeSecret);
+
+            echo View::make('stripe::customer_fields_view', [
+                'productWithInvoices' => $productWithInvoices,
+                'productWithSubscriptions' => $productWithSubscriptions
+            ])->render();
+        }
     }
 
     public function getStripeSecretKey($email)
     {
         $customer = Conversation::where('customer_email', $email)->first();
-
         $mailboxID = isset($customer->mailbox) ? $customer->mailbox->id : '';
+
         $stripeSettings = StripeSetting::select('stripe_secret_key')->where('mailbox_id', $mailboxID)->first();
 
         if (isset($stripeSettings)) {
@@ -123,18 +127,13 @@ class StripeServiceProvider extends ServiceProvider
      * @param mixed $email
      * @return mixed
      */
-    public function getStripeInvoices($email)
+    public function getStripeInvoices($email, $stripeSecret)
     {
-        $stripeSecret = $this->getStripeSecretKey($email);
-        
-        if (! empty($stripeSecret)) {
-            $stripe = new Stripe($stripeSecret);
-            $stripeInvoices = $stripe->getInvoices($email);
+        $stripe = new Stripe($stripeSecret);
+        $stripeInvoices = $stripe->getInvoices($email);
 
-            return $stripeInvoices;
-        }
+        return $stripeInvoices;
 
-        return false;
     }
 
     /**
@@ -142,24 +141,20 @@ class StripeServiceProvider extends ServiceProvider
      * @param mixed $email
      * @return mixed
      */
-    public function getStripeSubscriptions($email)
+    public function getStripeSubscriptions($email, $stripeSecret)
     {
-        $stripeSecret = $this->getStripeSecretKey($email);
-        if (! empty($stripeSecret)) {
-            $stripe = new Stripe($stripeSecret);
-            $stripeSubscriptions = $stripe->getSubscriptions($email);
+        $stripe = new Stripe($stripeSecret);
+        $stripeSubscriptions = $stripe->getSubscriptions($email);
 
-            return $stripeSubscriptions;
-        }
+        return $stripeSubscriptions;
 
-        return false;
     }
 
-     /**
-     * Show data in customer Profile Extra section
-     * @param mixed $customer
-     * @return void
-     */
+    /**
+    * Show data in customer Profile Extra section
+    * @param mixed $customer
+    * @return void
+    */
     public function mailboxSettingsMenu($mailbox)
     {
         echo View::make('stripe::mailbox_settings_menu', [
@@ -198,7 +193,7 @@ class StripeServiceProvider extends ServiceProvider
         ], 'public');
     }
 
-   
+
     /**
      * Register translations.
      *
@@ -211,7 +206,7 @@ class StripeServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'stripe');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'stripe'); 
+            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'stripe');
         }
     }
 
