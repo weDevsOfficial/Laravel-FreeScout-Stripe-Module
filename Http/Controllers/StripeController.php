@@ -2,11 +2,12 @@
 
 namespace Modules\Stripe\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Modules\Stripe\Entities\Mailbox;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Modules\Stripe\Entities\Mailbox;
+use Stripe\StripeClient;
 
 class StripeController extends Controller
 {
@@ -49,8 +50,13 @@ class StripeController extends Controller
     public function update(Request $request, Mailbox $mailbox)
     {
         $this->validate($request, [
-            'stripe_secret_key'=>'required|max:250',
+            'stripe_secret_key' => 'required|max:250',
         ]);
+
+        if ($this->checkCredential($request->stripe_secret_key) !== true) {
+            \Session::flash('flash_error_floating', __('Credentials Mismatch.'));
+            return redirect()->back();
+        }
 
         $requestData = [
             'mailbox_id'   => $mailbox->id,
@@ -70,11 +76,11 @@ class StripeController extends Controller
         return redirect()->route('stripe.settings', $mailbox->id);
     }
 
-     /**
-     *  Delete stripe key
-     * @param Request $request
-     * @return void
-     */
+    /**
+    *  Delete stripe key
+    * @param Request $request
+    * @return void
+    */
     public function destroy(Request $request, Mailbox $mailbox)
     {
         try {
@@ -85,5 +91,21 @@ class StripeController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    private function checkCredential($credential)
+    {
+        try {
+            $stripeClient  = new StripeClient($credential);
+            $response = $stripeClient->customers->all();
+
+            if($response) {
+                return true;
+            }
+
+            return false;
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
     }
 }
