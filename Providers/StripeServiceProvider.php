@@ -4,10 +4,10 @@ namespace Modules\Stripe\Providers;
 
 use App\Conversation;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Modules\Stripe\Api\Stripe;
 use Modules\Stripe\Entities\StripeSetting;
-use View;
 
 //Module alias
 define('STRIPE_MODULE', 'stripe');
@@ -77,9 +77,9 @@ class StripeServiceProvider extends ServiceProvider
      * Module hooks.
      */
     public function hooks()
-    {
+    { 
         \Eventy::addFilter('stylesheets', function ($styles) {
-            $styles[] = \Module::getPublicPath(STRIPE_MODULE).'/css/stripe.css';
+            $styles[] = \Module::getPublicPath('STRIPE_MODULE').'/css/stripe.css';
             return $styles;
         });
 
