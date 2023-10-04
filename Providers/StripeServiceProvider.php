@@ -77,9 +77,9 @@ class StripeServiceProvider extends ServiceProvider
      * Module hooks.
      */
     public function hooks()
-    { 
+    {
         \Eventy::addFilter('stylesheets', function ($styles) {
-            $styles[] = \Module::getPublicPath('STRIPE_MODULE').'/css/stripe.css';
+            $styles[] = '/modules/stripe/css/stripe.css';
             return $styles;
         });
 
